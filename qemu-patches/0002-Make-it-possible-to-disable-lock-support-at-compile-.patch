@@ -1,0 +1,33 @@
+From d8f3328872195b27478c165796912cc1aa21448c Mon Sep 17 00:00:00 2001
+From: =?UTF-8?q?=D0=A1=D0=BA=D0=BE=D0=B2=D0=BE=D1=80=D0=BE=D0=B4=D0=B0=20=D0?=
+ =?UTF-8?q?=9D=D0=B8=D0=BA=D0=B8=D1=82=D0=B0=20=D0=90=D0=BD=D0=B4=D1=80=D0=B5?=
+ =?UTF-8?q?=D0=B5=D0=B2=D0=B8=D1=87?= <chalkerx@gmail.com>
+Date: Fri, 6 May 2011 17:14:59 +0400
+Subject: [PATCH 2/2] Make it possible to disable lock support at
+ compile-time.
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+
+
+Signed-off-by: Сковорода Никита Андреевич <chalkerx@gmail.com>
+---
+ qemu-lock.h |    2 +-
+ 1 files changed, 1 insertions(+), 1 deletions(-)
+
+diff --git a/qemu-lock.h b/qemu-lock.h
+index a72edda..8d25712 100644
+--- a/qemu-lock.h
++++ b/qemu-lock.h
+@@ -19,7 +19,7 @@
+  * mingw32, which doesn't support any of the user-only targets.
+  * So we can simply assume we have pthread mutexes here.
+  */
+-#if defined(CONFIG_USER_ONLY)
++#if defined(CONFIG_USER_ONLY) && !defined(_NOLOCK)
+ 
+ #include <pthread.h>
+ #define spin_lock pthread_mutex_lock
+-- 
+1.7.5.1
+
