@@ -336,6 +336,10 @@ int qemu_stepper_data_prepare(CPUState *env, unsigned long int code_len, unsigne
 	}
 	return -1;
 }
+void qemu_stepper_stack_clear(CPUState *env) {
+	struct image_info *info = ((TaskState *) env->opaque)->info;
+	memset(info->stack_limit, 0, info->start_stack - info->stack_limit);
+}
 void qemu_stepper_data_set(CPUState *env, const unsigned char *ptr, unsigned long int size) {
 	struct image_info *info = ((TaskState *) env->opaque)->info;
 	info_data_set(info, ptr, size);
