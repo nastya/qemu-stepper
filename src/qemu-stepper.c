@@ -308,9 +308,6 @@ int qemu_stepper_step(CPUX86State *env) {
 	switch(trapnr) {
 		case EXCP_DEBUG: // We fall here after each normal step (because of cpu breakpoint).
 			break;
-		case 0x80:
-			//gemu_log("qemu: got syscall 0x%x\n", env->regs[R_EAX]);
-			break;
 		default:
 			//gemu_log("qemu: 0x%08lx: got CPU interrupt 0x%x.\n", (long)pc, trapnr);
 			return trapnr;
