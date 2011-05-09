@@ -255,6 +255,7 @@ CPUX86State * qemu_stepper_init() {
 	set_idt(17, 0);
 	set_idt(18, 0);
 	set_idt(19, 0);
+	set_idt(0x2c, 3); /// TODO: what is 3?
 	set_idt(0x80, 3);
 
 	/* linux segment setup */
