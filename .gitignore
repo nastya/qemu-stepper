@@ -1,0 +1,5 @@
+*~
+qemu-git
+build
+qemu-i386
+libqemu-stepper.so
