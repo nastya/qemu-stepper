@@ -27,6 +27,7 @@ OBJECTS	=	$(BUILD)/mmap.o \
 		$(BUILD)/cpuid.o \
 		$(BUILD)/disas.o \
 		$(BUILD)/signal.o \
+		$(BUILD)/user-exec.o \
 		$(BUILD)/qemu-stepper.o
 
 all: $(BUILD) $(QEMU) qemu-i386
@@ -38,7 +39,7 @@ $(BUILD):
 
 $(QEMU):
 	git clone $(QEMU_MIRROR) qemu-git
-	cd $(QEMU); git apply $(PATCHES)/*.patch
+	cd $(QEMU); git checkout .; git apply $(PATCHES)/*.patch
 
 $(BUILD)/config-target.h:
 	cd $(QEMU); ./configure \
@@ -111,6 +112,8 @@ $(BUILD)/cpuid.o: $(QEMU)/target-i386/cpuid.c
 $(BUILD)/disas.o: $(QEMU)/disas.c
 	$(CC) $(FLAGS2) -c -o $@ $(QEMU)/disas.c
 
+$(BUILD)/user-exec.o: $(QEMU)/user-exec.c
+	$(CC) $(FLAGS2) -c -o $@ $(QEMU)/user-exec.c
 
 $(BUILD)/signal.o: $(SRC)/signal.c
 	$(CC) $(FLAGS2) -c -o $@ $(SRC)/signal.c
