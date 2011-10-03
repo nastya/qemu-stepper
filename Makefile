@@ -2,6 +2,8 @@ QEMU	= $(CURDIR)/qemu-git
 SRC	= $(CURDIR)/src
 BUILD	= $(CURDIR)/build
 PATCHES = $(CURDIR)/qemu-patches
+QEMU_V	= $(CURDIR)/qemu-version
+QEMU_P	= $(BUILD)/qemu-version
 CC	= gcc
 FLAGS	= -D_NOLOCK -D_FORTIFY_SOURCE=2 -D_GNU_SOURCE -D_FILE_OFFSET_BITS=64 -D_LARGEFILE_SOURCE -Wstrict-prototypes -Wredundant-decls -Wall -Wundef -Wendif-labels -Wwrite-strings -Wmissing-prototypes -fno-strict-aliasing -fstack-protector-all -Wmissing-include-dirs -Wempty-body -Wnested-externs -Wformat-security -Wformat-y2k -Winit-self -Wignored-qualifiers -Wold-style-declaration -Wold-style-definition -Wtype-limits -O2 -fPIC
 FLAGS1	= $(FLAGS) -I$(BUILD) -I$(SRC) -I$(QEMU) -I$(QEMU)/slirp -I$(CURDIR)
@@ -30,16 +32,26 @@ OBJECTS	=	$(BUILD)/mmap.o \
 		$(BUILD)/user-exec.o \
 		$(BUILD)/qemu-stepper.o
 
-all: $(BUILD) $(QEMU) qemu-i386
+all: lib qemu-i386
 
-lib: $(BUILD) $(QEMU) libqemu-stepper.so
+lib: $(QEMU_P) libqemu-stepper.so
 
 $(BUILD):
 	mkdir $(BUILD)
 
 $(QEMU):
 	git clone $(QEMU_MIRROR) qemu-git
-	cd $(QEMU); git checkout .; git apply $(PATCHES)/*.patch
+
+qemu-git: $(QEMU_P)
+
+$(QEMU_P): $(BUILD) $(QEMU) $(QEMU_V)
+	cd $(QEMU); \
+		git checkout -f master;  \
+		git clean -dfqx; \
+		git pull; \
+		git checkout `head -1 $(QEMU_V)`; \
+		git apply $(PATCHES)/*.patch;
+	cp $(QEMU_V) $@;
 
 $(BUILD)/config-target.h:
 	cd $(QEMU); ./configure \
