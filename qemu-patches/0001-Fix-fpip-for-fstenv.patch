@@ -1,33 +1,21 @@
-From a781078f8977274425c4f14c2b17f72e0a5f73f5 Mon Sep 17 00:00:00 2001
+From a833efa953bca2e63eb9eb7f28f7ecd4d675a534 Mon Sep 17 00:00:00 2001
 From: =?UTF-8?q?=D0=90=D0=BD=D0=B0=D1=81=D1=82=D0=B0=D1=81=D0=B8=D1=8F=20=D0?=
- =?UTF-8?q?=A9=D0=B5=D1=80=D0=B1=D0=B8=D0=BD=D0=B8=D0=BD=D0=B0?= <nastya_jane@mail.ru>
-Date: Tue, 26 Apr 2011 22:22:26 +0400
+ =?UTF-8?q?=A9=D0=B5=D1=80=D0=B1=D0=B8=D0=BD=D0=B8=D0=BD=D0=B0?=
+ <nastya_jane@mail.ru>
+Date: Mon, 3 Oct 2011 22:54:59 +0400
 Subject: [PATCH 1/2] Fix fpip for fstenv.
 MIME-Version: 1.0
 Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 
 
-Signed-off-by: Сковорода Никита Андреевич <chalkerx@gmail.com>
+Signed-off-by: Анастасия Щербинина <nastya_jane@mail.ru>
 ---
- target-i386/cpu.h       |    1 +
  target-i386/helper.h    |    2 ++
  target-i386/op_helper.c |    9 +++++++--
  target-i386/translate.c |    1 +
- 4 files changed, 11 insertions(+), 2 deletions(-)
+ 3 files changed, 10 insertions(+), 2 deletions(-)
 
-diff --git a/target-i386/cpu.h b/target-i386/cpu.h
-index c7047d5..2cada6e 100644
---- a/target-i386/cpu.h
-+++ b/target-i386/cpu.h
-@@ -642,6 +642,7 @@ typedef struct CPUX86State {
-     uint16_t fpuc;
-     uint8_t fptags[8];   /* 0 = valid, 1 = empty */
-     FPReg fpregs[8];
-+    target_ulong fpip;
-     /* KVM-only so far */
-     uint16_t fpop;
-     uint64_t fpip;
 diff --git a/target-i386/helper.h b/target-i386/helper.h
 index 6b518ad..26b47a3 100644
 --- a/target-i386/helper.h
@@ -42,10 +30,10 @@ index 6b518ad..26b47a3 100644
  DEF_HELPER_0(unlock, void)
  DEF_HELPER_2(write_eflags, void, tl, i32)
 diff --git a/target-i386/op_helper.c b/target-i386/op_helper.c
-index 3c539f3..06cc3ad 100644
+index 3bb5a91..80e4df5 100644
 --- a/target-i386/op_helper.c
 +++ b/target-i386/op_helper.c
-@@ -120,6 +120,11 @@ static const CPU86_LDouble f15rk[7] =
+@@ -208,6 +208,11 @@ static const uint8_t rclb_table[32] = {
  
  static spinlock_t global_cpu_lock = SPIN_LOCK_UNLOCKED;
  
@@ -57,7 +45,7 @@ index 3c539f3..06cc3ad 100644
  void helper_lock(void)
  {
      spin_lock(&global_cpu_lock);
-@@ -4324,7 +4329,7 @@ void helper_fstenv(target_ulong ptr, int data32)
+@@ -4459,7 +4464,7 @@ void helper_fstenv(target_ulong ptr, int data32)
          stl(ptr, env->fpuc);
          stl(ptr + 4, fpus);
          stl(ptr + 8, fptag);
@@ -66,7 +54,7 @@ index 3c539f3..06cc3ad 100644
          stl(ptr + 16, 0); /* fpcs */
          stl(ptr + 20, 0); /* fpoo */
          stl(ptr + 24, 0); /* fpos */
-@@ -4333,7 +4338,7 @@ void helper_fstenv(target_ulong ptr, int data32)
+@@ -4468,7 +4473,7 @@ void helper_fstenv(target_ulong ptr, int data32)
          stw(ptr, env->fpuc);
          stw(ptr + 2, fpus);
          stw(ptr + 4, fptag);
@@ -76,10 +64,10 @@ index 3c539f3..06cc3ad 100644
          stw(ptr + 10, 0);
          stw(ptr + 12, 0);
 diff --git a/target-i386/translate.c b/target-i386/translate.c
-index 199302e..dbd6cfb 100644
+index 1ef8d16..12ed059 100644
 --- a/target-i386/translate.c
 +++ b/target-i386/translate.c
-@@ -5952,6 +5952,7 @@ static target_ulong disas_insn(DisasContext *s, target_ulong pc_start)
+@@ -5965,6 +5965,7 @@ static target_ulong disas_insn(DisasContext *s, target_ulong pc_start)
                  goto illegal_op;
              }
          }
@@ -88,5 +76,5 @@ index 199302e..dbd6cfb 100644
          /************************/
          /* string ops */
 -- 
-1.7.5.1
+1.7.6.4
 
