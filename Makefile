@@ -34,17 +34,17 @@ OBJECTS	=	$(BUILD)/mmap.o \
 
 all: lib qemu-i386
 
-lib: $(QEMU_P) libqemu-stepper.so
+lib: qemu-local libqemu-stepper.so
 
 $(BUILD):
-	mkdir $(BUILD)
+	mkdir $@
 
 $(QEMU):
 	git clone $(QEMU_MIRROR) qemu-git
 
-qemu-git: $(QEMU_P)
+qemu-local: $(BUILD) $(QEMU) $(QEMU_P)
 
-$(QEMU_P): $(BUILD) $(QEMU) $(QEMU_V)
+$(QEMU_P): $(QEMU_V)
 	cd $(QEMU); \
 		git checkout -f master;  \
 		git clean -dfqx; \
@@ -146,6 +146,9 @@ libqemu-stepper.so: $(OBJECTS)
 
 clean:
 	rm -f *~ */*~ qemu-i386 libqemu-stepper.so $(OBJECTS) $(BUILD)/main.o $(BUILD)/config-target.h $(BUILD)/config-host.h $(BUILD)/trace.h
+
+clear: clean
+	rm -rf build
 
 cleanbin:
 	rm -f libqemu-stepper.so qemu-i386
