@@ -10,6 +10,8 @@ void qemu_stepper_data_set(CPUState *env, const unsigned char *ptr, unsigned lon
 void qemu_stepper_entry_set(CPUState *env, unsigned long int entry, unsigned long int stack_offset);
 unsigned long int qemu_stepper_eip(CPUState *env);
 int qemu_stepper_read(CPUState *env, char *buff, unsigned long int size);
+int qemu_stepper_read_code(CPUState *env, char *buff, unsigned long int size, unsigned long int address);
+int qemu_stepper_read_address(CPUState *env, char *buff, unsigned long int size, unsigned long int address, unsigned int segment);
 void qemu_stepper_print_debug(CPUState *env);
 unsigned long int qemu_stepper_register(CPUState *env, int regid);
 unsigned long int qemu_stepper_offset(CPUState *env);

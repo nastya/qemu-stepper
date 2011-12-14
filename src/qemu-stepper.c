@@ -352,7 +352,13 @@ unsigned long int qemu_stepper_eip(CPUState *env) {
 	return env->segs[R_CS].base + env->eip;
 }
 int qemu_stepper_read(CPUState *env, char *buff, unsigned long int size) {
-	return cpu_memory_rw_debug(env, env->segs[R_CS].base + env->eip, buff, size, 0);
+	return qemu_stepper_read_address(env, buff, size, env->eip, R_CS);
+}
+int qemu_stepper_read_code(CPUState *env, char *buff, unsigned long int size, unsigned long int address) {
+	return qemu_stepper_read_address(env, buff, size, address, R_CS);
+}
+int qemu_stepper_read_address(CPUState *env, char *buff, unsigned long int size, unsigned long int address, unsigned int segment) {
+	return cpu_memory_rw_debug(env, env->segs[segment].base + address, buff, size, 0);
 }
 unsigned long int qemu_stepper_register(CPUState *env, int regid) {
 //	fprintf(stderr, "REG: 0x%x\n", env->regs[regid]);
