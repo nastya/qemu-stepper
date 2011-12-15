@@ -19,7 +19,7 @@ int main(int argc, char **argv)
 	close(fd);
 
 	cpu_set_log_filename("/tmp/qemu.log");
-	cpu_set_log(cpu_str_to_log_mask("in_asm,out_asm"));
+	cpu_set_log(cpu_str_to_log_mask("in_asm,cpu"));
 
 	CPUState *env = qemu_stepper_init();
 
